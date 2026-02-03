@@ -796,6 +796,40 @@ h1, h2, h3, summary {
   }
 }
 
+/* =======================================================
+   FORCE KATEX + MONOSPACE READABILITY ON MOBILE
+   ======================================================= */
+
+   @media (max-width: 600px) {
+
+/* Base KaTeX scaling */
+.katex {
+  font-size: 1.25em !important;
+}
+
+/* Math symbols */
+.katex .mord,
+.katex .mbin,
+.katex .mrel,
+.katex .mopen,
+.katex .mclose,
+.katex .mpunct {
+  font-size: 1em !important;
+}
+
+/* \texttt{} specifically */
+.katex .texttt,
+.katex .mord.text {
+  font-size: 1.15em !important;
+  letter-spacing: 0.02em;
+}
+
+/* Inline code outside KaTeX */
+code {
+  font-size: 1em !important;
+}
+}
+
 </style>
 </head>
 
