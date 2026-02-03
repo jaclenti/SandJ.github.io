@@ -714,6 +714,88 @@ blockquote.quote-large {
 	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
 }
 	
+
+body {
+  background-color: #f4f8fc; /* wedding blue very light */
+}
+
+@media (max-width: 600px) {
+
+body {
+  font-size: 16px; /* baseline leggibile */
+}
+
+p, li {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+code, .katex {
+  font-size: 1rem !important;
+}
+
+.katex-display {
+  overflow-x: auto;
+}
+
+}
+
+
+/* === Wedding overrides === */
+
+body {
+  background-color: #f4f8fc;
+  white-space: normal;
+}
+
+p {
+  margin: 0.4em 0;
+}
+
+ul, ol {
+  margin: 0.4em 0;
+}
+
+details {
+  margin: 2em 0;
+}
+
+summary {
+  cursor: pointer;
+}
+
+h1, h2, h3, summary {
+  color: #2b4a6f;
+}
+
+@media (max-width: 600px) {
+
+  body {
+    font-size: 16px;
+  }
+
+  p, li {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  code, .katex {
+    font-size: 1rem !important;
+  }
+
+  .katex-display {
+    overflow-x: auto;
+  }
+
+  ul, ol {
+    padding-inline-start: 1.2em;
+  }
+
+  li {
+    padding-left: 0;
+  }
+}
+
 </style>
 </head>
 
