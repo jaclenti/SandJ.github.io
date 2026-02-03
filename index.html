@@ -2,6 +2,12 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title>S&amp;J</title>
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 		<style>
 /* cspell:disable-file */
 /* webkit printing magic: print all background colors */
@@ -832,6 +838,37 @@ code {
 }
 }
 
+/* Mobile normalization */
+@media (max-width: 768px) {
+
+body {
+  font-size: 16px;
+}
+
+p, li {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+code,
+.katex,
+.katex * {
+  font-size: 1rem !important;
+}
+
+summary {
+  font-size: 1.1rem;
+}
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
+
+button {
+  font-size: 0.9rem;
+}
+}
 
 
 /* =========================================
@@ -884,6 +921,16 @@ code {
   padding: 6px 10px;
 }
 
+.arcade,
+#endMessage,
+#ranking,
+#ranking * {
+  font-family: 'Press Start 2P', monospace !important;
+}
+
+.katex {
+  font-size: 1em !important;
+}
 
 
 </style>
