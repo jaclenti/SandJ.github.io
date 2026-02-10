@@ -9,6 +9,7 @@ const STATE_IDLE = "idle";
 const STATE_PLAYING = "playing";
 const STATE_ENDED = "ended";
 let gameState = STATE_IDLE;
+let wonGame = false; // Track win/loss status
 
 // ====== GAME DATA ======
 let player, bullets, invaders, invaderDir;
@@ -22,8 +23,8 @@ let moveLeft = false;
 let moveRight = false;
 
 // ====== GAME SPEED (Pixels per second) ======
-const bullet_speed = 100; 
-const ship_speed = 100;   
+const bullet_speed = 150; 
+const ship_speed = 120;   
 const alien_speed = 50;   
 
 // Keyboard Listeners
@@ -47,26 +48,23 @@ document.querySelectorAll("#touchControls button").forEach(btn => {
   });
 });
 
-// ====== SHOOT LOGIC ======
 function shoot() {
-  // Fixed: Bullet now spawns at ship's X, not X + 400!
   bullets.push({ x: player.x + 8, y: player.y });
 }
 
-// ====== START GAME ======
 function startGame() {
   const startBtn = document.getElementById("startBtn");
   if(startBtn) startBtn.blur(); 
   
   initGame();
   gameState = STATE_PLAYING;
+  wonGame = false; 
   startTime = performance.now();
-  lastTime = performance.now(); // Reset lastTime to avoid huge DT jump
+  lastTime = performance.now();
 }
 
 document.getElementById("startBtn").addEventListener("click", startGame);
 
-// ====== INIT ======
 function initGame() {
   player = { x: W / 2 - 10, y: H - 24 };
   bullets = [];
@@ -84,39 +82,42 @@ function initGame() {
 function update(dt) {
   if (gameState !== STATE_PLAYING) return;
 
-  // Spacebar shoot (with debounce)
   if (keys["Space"]) {
     shoot();
     keys["Space"] = false; 
   }
 
-  // Ship movement
   if (keys["ArrowLeft"] || moveLeft) player.x -= ship_speed * dt;
   if (keys["ArrowRight"] || moveRight) player.x += ship_speed * dt;
   player.x = Math.max(0, Math.min(W - 20, player.x));
 
-  // Bullets
   bullets.forEach(b => (b.y -= bullet_speed * dt));
   bullets = bullets.filter(b => b.y > 0);
 
-  // Invaders
   let edge = false;
+  let reachedBottom = false;
+
   invaders.forEach(i => {
     i.x += (alien_speed * invaderDir) * dt;
-    // Check if any invader is hitting the bounds
-    if (i.x < 5 || i.x > W - 15) edge = true;
+    if (i.x < 10 || i.x > W - 20) edge = true;
+    
+    // LOSS CONDITION: Aliens reach the player's height
+    if (i.y >= player.y - 10) reachedBottom = true;
   });
 
+  if (reachedBottom) {
+    endGame(false); // Player lost
+    return;
+  }
+
   if (edge) {
-    invaderDir *= -1; // Reverse horizontal direction
+    invaderDir *= -1;
     invaders.forEach(i => {
-      i.y += 10; // Drop down    
+      i.y += 10;
       i.x += (invaderDir * 2); 
     });
   }
   
-  
-  // Collision
   bullets = bullets.filter(b => {
     let hit = false;
     invaders = invaders.filter(i => {
@@ -127,10 +128,9 @@ function update(dt) {
     return !hit;
   });
 
-  if (invaders.length === 0) endGame();
+  if (invaders.length === 0) endGame(true); // Player won
 }
 
-// ====== DRAW ======
 function draw() {
   ctx.fillStyle = "#e8f4ff";
   ctx.fillRect(0, 0, W, H);
@@ -155,46 +155,73 @@ function draw() {
   }
 }
 
-// ====== MAIN LOOP ======
 function gameLoop(timestamp) {
     const dt = (timestamp - lastTime) / 1000;
     lastTime = timestamp;
-
     const capDt = Math.min(dt, 0.1); 
 
     update(capDt);
     draw();
-
     requestAnimationFrame(gameLoop);
 }
 
-// Start the loop skeleton immediately
 requestAnimationFrame(gameLoop);
 
-function endGame() {
+function endGame(success) {
   gameState = STATE_ENDED;
-  document.getElementById("nameModal").style.display = "block";
-  document.getElementById("playerName").focus();
+  wonGame = success;
+  
+  // Only show the name input if they actually won
+  if (success) {
+    document.getElementById("nameModal").style.display = "block";
+    document.getElementById("playerName").focus();
+  }
 }
 
 // ====== LEADERBOARD ======
+// ====== LEADERBOARD & END SCREEN ======
 function drawEndScreen() {
   ctx.fillStyle = "#e8f4ff";
   ctx.fillRect(0, 0, W, H);
   ctx.fillStyle = "#000";
   ctx.textAlign = "center";
-  ctx.font = "12px sans-serif";
-  ctx.fillText("GRAZIE PER AVER", W / 2, 60);
-  ctx.fillText("SALVATO LE NOZZE!", W / 2, 80);
+
+  // Use the Arcade Font for everything
+  const arcadeFont = "'Press Start 2P', cursive";
+
+  if (wonGame) {
+    ctx.font = `12px ${arcadeFont}`;
+    ctx.fillText("GRAZIE PER AVER", W / 2, 50);
+    ctx.fillText("SALVATO LE NOZZE!", W / 2, 70);
+  } else {
+    ctx.fillStyle = "#d00"; 
+    ctx.font = `14px ${arcadeFont}`;
+    ctx.fillText("GAME OVER!", W / 2, 40);
+    
+    ctx.fillStyle = "#000";
+    ctx.font = `6px ${arcadeFont}`; // Smaller to fit the long sentence
+    ctx.fillText("UN TEMIBILE ATTACCO ALIENO", W / 2, 65);
+    ctx.fillText("POTREBBE VERIFICARSI", W / 2, 75);
+    ctx.fillText("DURANTE IL MATRIMONIO!", W / 2, 85);
+  }
+
+  // Leaderboard Section
+  ctx.fillStyle = "#333";
+  ctx.font = `8px ${arcadeFont}`;
+  ctx.fillText("--- CLASSIFICA ---", W / 2, 115);
 
   const scores = JSON.parse(localStorage.getItem("weddingScores") || "[]");
-  ctx.font = "10px sans-serif";
-  ctx.fillText("CLASSIFICA (TOP 5)", W / 2, 110);
-
   scores.slice(0, 5).forEach((s, i) => {
-    ctx.fillText(`${i + 1}. ${s.name} - ${s.time}s`, W / 2, 130 + i * 14);
+    ctx.font = `7px ${arcadeFont}`;
+    // .toUpperCase() makes it feel more like an old-school cabinet
+    ctx.fillText(`${i + 1}. ${s.name.toUpperCase()} ${s.time}S`, W / 2, 135 + i * 14);
   });
+  
+  ctx.font = `6px ${arcadeFont}`;
+  ctx.fillStyle = "#888";
+  ctx.fillText("PREMI 'START' PER RIPROVARE", W / 2, H - 15);
 }
+
 
 document.getElementById("saveScoreBtn").addEventListener("click", () => {
   const nameInput = document.getElementById("playerName");
