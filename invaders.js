@@ -22,6 +22,11 @@ const keys = {};
 let moveLeft = false;
 let moveRight = false;
 
+// ====== GAME SPEED ============
+let bullet_speed = 10
+let ship_speed = 4
+let alien_speed = 1.5
+
 // Keyboard Listeners
 document.addEventListener("keydown", e => { keys[e.code] = true; });
 document.addEventListener("keyup", e => { keys[e.code] = false; });
@@ -47,7 +52,7 @@ document.querySelectorAll("#touchControls button").forEach(btn => {
 
 // ====== SHOOT LOGIC ======
 function shoot() {
-  bullets.push({ x: player.x + 8, y: player.y });
+  bullets.push({ x: player.x + bullet_speed, y: player.y });
 }
 
 // ====== START GAME ======
@@ -83,8 +88,8 @@ function update() {
   if (gameState !== STATE_PLAYING) return;
 
   // Combined Input (Keyboard + Touch)
-  if (keys["ArrowLeft"] || moveLeft) player.x -= 4;
-  if (keys["ArrowRight"] || moveRight) player.x += 4;
+  if (keys["ArrowLeft"] || moveLeft) player.x -= ship_speed;
+  if (keys["ArrowRight"] || moveRight) player.x += ship_speed;
   player.x = Math.max(0, Math.min(W - 20, player.x));
 
   // Keyboard Shoot (Space)
@@ -99,7 +104,7 @@ function update() {
   // Invader movement
   let edge = false;
   invaders.forEach(i => {
-    i.x += invaderDir;
+    i.x += alien_speed * invaderDir;
     if (i.x < 10 || i.x > W - 20) edge = true;
   });
 
@@ -150,13 +155,26 @@ function draw() {
 }
 
 // ====== LOOP ======
-function loop() {
-  update();
-  draw();
-  if (gameState === STATE_PLAYING) {
-    animationId = requestAnimationFrame(loop);
-  }
+let lastTime = 0;
+const fps = 60;
+const interval = 1000 / fps;
+
+function gameLoop(timestamp) {
+    // Calculate how much time has passed since the last frame
+    const deltaTime = timestamp - lastTime;
+
+    if (deltaTime > interval) {
+        // Only update the game if enough time has passed (60fps lock)
+        lastTime = timestamp - (deltaTime % interval);
+        
+        update(); // Your game update logic
+        draw();   // Your game drawing logic
+    }
+
+    requestAnimationFrame(gameLoop);
 }
+
+requestAnimationFrame(gameLoop);
 
 function endGame() {
   gameState = STATE_ENDED;
