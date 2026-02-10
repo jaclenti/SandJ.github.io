@@ -1,0 +1,141 @@
+/* =========================================
+   2020s DESIGN SYSTEM: PEACH & BLUE
+   ========================================= */
+   :root {
+    /* Colors */
+    --accent-blue: #387dc9;
+    --soft-blue: #e8f4ff;
+    --accent-peach: #ffdbca;
+    --soft-peach: #fff5f0;
+    --text-main: #2d3436;
+    --text-muted: #636e72;
+    
+    /* Modern Typography */
+    --font-display: "Inter", system-ui, -apple-system, sans-serif;
+    --font-game: 'Press Start 2P', monospace;
+    
+    /* Shadows & Glass */
+    --glass: rgba(255, 255, 255, 0.7);
+    --shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  }
+  
+  /* =========================================
+     BASE STYLING
+     ========================================= */
+  body {
+    font-family: var(--font-display);
+    font-size: 18px; /* Slightly larger for a premium feel */
+    line-height: 1.7;
+    color: var(--text-main);
+    background: linear-gradient(135deg, var(--soft-blue) 0%, var(--soft-peach) 100%);
+    background-attachment: fixed;
+    padding: 1rem;
+  }
+  
+  /* Page Title Overrides */
+  .page-title {
+    font-size: 3.5rem;
+    letter-spacing: -0.04em;
+    background: linear-gradient(to right, var(--accent-blue), #ff8a71);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 0.5em;
+  }
+  
+  /* =========================================
+     MODERN TYPOGRAPHY (LESS BORING)
+     ========================================= */
+  h1, h2, h3 {
+    font-weight: 800;
+    color: #1e272e;
+  }
+  
+  /* Styling the "When" and "What" sections */
+  summary {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--accent-blue);
+    padding: 0.5em 0;
+    transition: color 0.3s ease;
+  }
+  
+  summary:hover {
+    color: #ff8a71;
+  }
+  
+  /* =========================================
+     MATH & CODE (INTEGRATED LOOK)
+     ========================================= */
+  .katex {
+    font-size: 1.05em; /* Slightly boosted math size */
+    background: rgba(255, 255, 255, 0.5);
+    padding: 2px 6px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+  }
+  
+  code, .mord.texttt {
+    font-size: 0.9em;
+    background: var(--accent-peach);
+    color: #d35400;
+    padding: 0.2em 0.5em;
+    border-radius: 6px;
+    font-family: var(--font-mono) !important;
+  }
+  
+  /* =========================================
+     THE GAME SECTION (ARCADE GLASS)
+     ========================================= */
+  #invaders {
+    background: var(--glass);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: var(--shadow);
+    border-radius: 24px;
+    padding: 2rem;
+    margin-top: 3rem;
+  }
+  
+  canvas {
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(56, 125, 201, 0.2);
+  }
+  
+  /* =========================================
+     TOUCH CONTROLS (GAMEBOY VIBE)
+     ========================================= */
+  #touchControls button {
+    background: white;
+    border: none;
+    border-radius: 50%; /* Circular buttons */
+    width: 60px;
+    height: 60px;
+    box-shadow: 0 4px 0 #ddd;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.1s;
+  }
+  
+  #touchControls button:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 #ddd;
+  }
+  
+  #touchControls button[data-dir="fire"] {
+    background: var(--accent-peach);
+    box-shadow: 0 4px 0 #e67e22;
+  }
+  
+  /* =========================================
+     NOTION CLEANUP
+     ========================================= */
+  blockquote {
+    border-left: 4px solid var(--accent-peach);
+    background: rgba(255, 255, 255, 0.3);
+    padding: 1.5rem;
+    border-radius: 0 12px 12px 0;
+    font-style: italic;
+    font-size: 1.1rem;
+  }

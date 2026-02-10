@@ -17,31 +17,52 @@ let startTime = 0;
 let elapsed = 0;
 let animationId = null;
 
-// ====== INPUT ======
+// ====== INPUT HANDLING ======
 const keys = {};
+let moveLeft = false;
+let moveRight = false;
 
-document.addEventListener("keydown", e => {
-  keys[e.code] = true;
+// Keyboard Listeners
+document.addEventListener("keydown", e => { keys[e.code] = true; });
+document.addEventListener("keyup", e => { keys[e.code] = false; });
+
+// Touch Listeners
+document.querySelectorAll("#touchControls button").forEach(btn => {
+  // Use pointerdown/up for better compatibility
+  btn.addEventListener("touchstart", e => {
+    e.preventDefault();
+    const dir = btn.dataset.dir;
+    if (dir === "left") moveLeft = true;
+    if (dir === "right") moveRight = true;
+    if (dir === "fire" && gameState === STATE_PLAYING) shoot();
+  });
+
+  btn.addEventListener("touchend", e => {
+    e.preventDefault();
+    const dir = btn.dataset.dir;
+    if (dir === "left") moveLeft = false;
+    if (dir === "right") moveRight = false;
+  });
 });
 
-document.addEventListener("keyup", e => {
-  keys[e.code] = false;
-});
+// ====== SHOOT LOGIC ======
+function shoot() {
+  bullets.push({ x: player.x + 8, y: player.y });
+}
 
-document.addEventListener("keydown", e => {
-  if (gameState !== STATE_PLAYING) return;
-  keys[e.code] = true;
-});
+// ====== START GAME ======
+function startGame() {
+  const startBtn = document.getElementById("startBtn");
+  if(startBtn) startBtn.blur(); 
+  
+  cancelAnimationFrame(animationId);
+  initGame();
+  startTime = performance.now();
+  gameState = STATE_PLAYING;
+  loop();
+}
 
-document.addEventListener("keyup", e => {
-  keys[e.code] = false;
-});
-
-document.getElementById("startBtn").addEventListener("click", e => {
-  e.target.blur();   // 🔥 THIS LINE FIXES THE RESTART BUG
-  startGame();
-});
-
+document.getElementById("startBtn").addEventListener("click", startGame);
 
 // ====== INIT ======
 function initGame() {
@@ -57,30 +78,19 @@ function initGame() {
   }
 }
 
-// ====== START ======
-function startGame() {
-  cancelAnimationFrame(animationId);
-  initGame();
-  startTime = performance.now();
-  gameState = STATE_PLAYING;
-  loop();
-}
-
-document.getElementById("startBtn").addEventListener("click", startGame);
-
 // ====== UPDATE ======
 function update() {
   if (gameState !== STATE_PLAYING) return;
 
-  // Movement
-  if (keys["ArrowLeft"]) player.x -= 4;
-  if (keys["ArrowRight"]) player.x += 4;
+  // Combined Input (Keyboard + Touch)
+  if (keys["ArrowLeft"] || moveLeft) player.x -= 4;
+  if (keys["ArrowRight"] || moveRight) player.x += 4;
   player.x = Math.max(0, Math.min(W - 20, player.x));
 
-  // Shoot (single press)
+  // Keyboard Shoot (Space)
   if (keys["Space"]) {
-    bullets.push({ x: player.x + 8, y: player.y });
-    keys["Space"] = false;
+    shoot();
+    keys["Space"] = false; // Prevent rapid fire auto-hold
   }
 
   bullets.forEach(b => (b.y -= 5));
@@ -98,7 +108,7 @@ function update() {
     invaders.forEach(i => (i.y += 10));
   }
 
-  // Collision (1 bullet = 1 alien)
+  // Collision
   bullets = bullets.filter(b => {
     let hit = false;
     invaders = invaders.filter(i => {
@@ -127,6 +137,7 @@ function draw() {
     ctx.font = "16px serif";
     ctx.fillText("🚀", player.x, player.y + 14);
 
+    ctx.fillStyle = "#387dc9"; // Wedding Blue for bullets
     bullets.forEach(b => ctx.fillRect(b.x, b.y, 2, 6));
 
     ctx.font = "14px serif";
@@ -150,13 +161,11 @@ function loop() {
 function endGame() {
   gameState = STATE_ENDED;
   cancelAnimationFrame(animationId);
-
   document.getElementById("nameModal").style.display = "block";
   document.getElementById("playerName").focus();
 }
 
-
-// ====== END SCREEN ======
+// ====== END SCREEN & SAVING ======
 function drawEndScreen() {
   ctx.fillStyle = "#e8f4ff";
   ctx.fillRect(0, 0, W, H);
@@ -165,13 +174,13 @@ function drawEndScreen() {
   ctx.textAlign = "center";
 
   ctx.font = "12px 'Press Start 2P'";
-  ctx.fillText("Grazie per aver", W / 2, 60);
-  ctx.fillText("salvato il matrimonio!", W / 2, 80);
+  ctx.fillText("GRAZIE PER AVER", W / 2, 60);
+  ctx.fillText("SALVATO LE NOZZE!", W / 2, 80);
 
   const scores = JSON.parse(localStorage.getItem("weddingScores") || "[]");
 
   ctx.font = "8px 'Press Start 2P'";
-  ctx.fillText("Classifica", W / 2, 110);
+  ctx.fillText("CLASSIFICA", W / 2, 110);
 
   scores.slice(0, 5).forEach((s, i) => {
     ctx.fillText(`${i + 1}. ${s.name} - ${s.time}s`, W / 2, 130 + i * 14);
@@ -185,7 +194,7 @@ document.getElementById("saveScoreBtn").addEventListener("click", () => {
   const name = nameInput.value.trim() || "Anonimo";
 
   const scores = JSON.parse(localStorage.getItem("weddingScores") || "[]");
-  scores.push({ name, time: elapsed });
+  scores.push({ name, time: parseFloat(elapsed) });
   scores.sort((a, b) => a.time - b.time);
   localStorage.setItem("weddingScores", JSON.stringify(scores));
 
