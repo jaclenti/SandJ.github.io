@@ -25,7 +25,7 @@ let moveRight = false;
 // ====== GAME SPEED ============
 let bullet_speed = 10
 let ship_speed = 4
-let alien_speed = 1.5
+let alien_speed = 0.5
 
 // Keyboard Listeners
 document.addEventListener("keydown", e => { keys[e.code] = true; });
