@@ -152,25 +152,30 @@ body {
 
 /* ── NEW PAGE TITLE IMAGE ─────────────────────────── */
 .title-container {
-  text-align: center;
-  margin: 2rem 0 1rem;
-  padding: 0 1rem;
+  width: 100%;           /* Occupa tutto lo spazio disponibile */
+  display: flex;         /* Usa flexbox per centrare */
+  justify-content: center; 
+  align-items: center;
+  flex-direction: column;
+  margin: 2rem 0 1rem 0 !important; /* Forza margini sopra/sotto */
+  padding: 0 !important; /* Elimina padding sospetti che spingono a sinistra */
+  left: 0;               /* Reset posizionamento */
 }
 
 .page-title-image {
-  display: inline-block;
-  max-width: 100%; /* Impedisce all'immagine di uscire dai bordi su mobile */
+  width: 100%;
+  max-width: 600px;      /* Deve corrispondere alla max-width dell'img */
+  margin: 0 auto;        /* Centratura classica */
 }
 
 .page-title-image img {
   width: 100%;
-  max-width: 600px; /* Imposta la larghezza massima che desideri per il logo */
   height: auto;
   display: block;
-  margin: 0 auto;
-  /* Opzionale: un leggero filtro se vuoi renderla più morbida */
+  margin: 0 auto;        /* Centra l'immagine nel suo div */
   filter: drop-shadow(0 4px 10px rgba(0,0,0,0.05));
 }
+
 
 /* Nascondiamo definitivamente la vecchia icona Notion se presente */
 .page-header-icon { display: none !important; }
