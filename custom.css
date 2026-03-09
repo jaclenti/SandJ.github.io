@@ -4,7 +4,7 @@
    ===================================================== */
 
 /* ── FONT IMPORTS ─────────────────────────────────── */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;600;700&family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:wght@400;600;700&family=Press+Start+2P&display=swap');
 
 /* ── RESET & BOX MODEL ────────────────────────────── */
 html { -webkit-print-color-adjust: exact; }
@@ -23,17 +23,25 @@ html, body { margin: 0; padding: 0; }
 /* ── DESIGN TOKENS ────────────────────────────────── */
 :root {
   --blue:       #387dc9;
+  --cornflowerblue: #6495ED;
   --blue-dark:  #1f4e8a;
   --soft-blue:  #e8f4ff;
   --peach:      #ffdbca;
+  --ghostwhite: #F8F8FF;
+  --lavender: #E6E6FA;
+  --mediumpurple: #9370DB;
   --soft-peach: #fff5f0;
+  --mediumseagreen: #3CB371;
+  --honeydrew: #F0FFF0;
   --rust:       #d35400;
   --text:       #2d3436;
+  --mediumaquamarine: #66CDAA;
   --muted:      #636e72;
 
   --font-serif:   'Cormorant Garamond', Georgia, serif;
   --font-sans:    'DM Sans', system-ui, sans-serif;
   --font-game:    'Press Start 2P', monospace;
+  --font-mono:    'Courier Prime', 'Courier New', monospace; /* <-- AGGIUNTO */
 
   --glass:  rgba(255, 255, 255, 0.72);
   --shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
@@ -42,12 +50,12 @@ html, body { margin: 0; padding: 0; }
 
 /* ── BODY BASE ────────────────────────────────────── */
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: 18px;
   line-height: 1.75;
   color: var(--text);
   /* Subtle warm background that doesn't fight the photos */
-  background: #f9f5f1;
+  background: #F8F8FF;
   white-space: normal;
 }
 
@@ -135,12 +143,37 @@ body {
   letter-spacing: -0.01em;
   line-height: 1.1;
   /* Blue → peach gradient name */
-  background: linear-gradient(115deg, var(--blue) 0%, #ff8a71 70%);
+  background: linear-gradient(115deg, var(--cornflowerblue) 0%, #E6E6FA 70%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 1rem 0 0.3em;
   text-align: center;
 }
+
+/* ── NEW PAGE TITLE IMAGE ─────────────────────────── */
+.title-container {
+  text-align: center;
+  margin: 2rem 0 1rem;
+  padding: 0 1rem;
+}
+
+.page-title-image {
+  display: inline-block;
+  max-width: 100%; /* Impedisce all'immagine di uscire dai bordi su mobile */
+}
+
+.page-title-image img {
+  width: 100%;
+  max-width: 600px; /* Imposta la larghezza massima che desideri per il logo */
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  /* Opzionale: un leggero filtro se vuoi renderla più morbida */
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.05));
+}
+
+/* Nascondiamo definitivamente la vecchia icona Notion se presente */
+.page-header-icon { display: none !important; }
 
 /* ── HEADINGS ─────────────────────────────────────── */
 h1, h2, h3 {
@@ -151,7 +184,7 @@ h1, h2, h3 {
 
 /* ── BLOCKQUOTE ───────────────────────────────────── */
 blockquote {
-  border-left: 4px solid var(--peach);
+  border-left: 4px solid var(--lavender);
   background: rgba(255, 255, 255, 0.45);
   padding: 1.4rem 1.8rem;
   border-radius: 0 var(--radius) var(--radius) 0;
@@ -180,10 +213,10 @@ details {
 }
 
 summary {
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--blue);
+  color: var(--cornflowerblue);
   padding: 0.4em 0;
   cursor: pointer;
   list-style: none; /* hide default triangle */
@@ -201,8 +234,8 @@ summary::before {
   font-size: 0.85em;
 }
 details[open] > summary::before { transform: rotate(90deg); }
-summary:hover { color: #ff8a71; }
-details[open] > summary { color: #ff8a71; }
+summary:hover { color: var(--mediumaquamarine); }
+details[open] > summary { color: var(--mediumaquamarine); }
 
 /* Animated reveal for <details> content */
 details[open] > *:not(summary) {
@@ -219,8 +252,8 @@ details[open] > *:not(summary) {
 
 code, .mord.texttt {
   font-size: 0.88em;
-  background: var(--peach);
-  color: var(--rust);
+  background: var(--honeydrew);
+  color: var(--mediumseagreen);
   padding: 0.2em 0.5em;
   border-radius: 5px;
   font-family: 'Courier New', monospace !important;
@@ -258,12 +291,12 @@ th, td { border: 1px solid rgba(55, 53, 47, 0.09); padding: 0.5em 0.75em; text-a
 
 /* ── PRESENZE ─────────────────────────────────────── */
 .presenze-container summary { font-size: 1.15rem; }
-.presenze-container details[open] summary { color: #ff8a71; }
+.presenze-container details[open] summary { color: var(--mediumaquamarine); }
 
 /* ── TEMPLATE CARD (Missiva) ─────────────────────── */
 .template-card {
-  background: var(--soft-peach);
-  border: 1px solid var(--peach);
+  background: var(--lavender);
+  border: 1px solid var(--mediumpurple);
   border-radius: var(--radius);
   margin-top: 1rem;
   padding: 20px;
@@ -292,7 +325,7 @@ th, td { border: 1px solid rgba(55, 53, 47, 0.09); padding: 0.5em 0.75em; text-a
   text-transform: uppercase;
 }
 #copyBtn {
-  background: linear-gradient(135deg, #ff8a71 0%, #ff5e3a 100%);
+  background: linear-gradient(135deg, #663399 0%, #663399 100%);
   color: white;
   border: none;
   padding: 8px 18px;
@@ -360,17 +393,17 @@ th, td { border: 1px solid rgba(55, 53, 47, 0.09); padding: 0.5em 0.75em; text-a
   font-family: var(--font-game);
   font-size: 9px;
   padding: 14px 22px;
-  background: var(--peach);
+  background: var(--mediumpurple);
   border: none;
-  border-bottom: 4px solid #e67e22;
+  border-bottom: 4px solid var(--mediumpurple);
   border-radius: 8px;
   cursor: pointer;
   letter-spacing: 0.05em;
   transition: transform 0.15s, box-shadow 0.15s;
-  box-shadow: 0 4px 0 #e67e22;
+  box-shadow: 0 4px 0 var(--mediumpurple);
 }
-#startBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #e67e22; }
-#startBtn:active { transform: translateY(2px); box-shadow: 0 2px 0 #e67e22; }
+#startBtn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--mediumpurple); }
+#startBtn:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--mediumpurple); }
 
 /* Touch controls (D-Pad vibe) */
 #touchControls {
@@ -381,7 +414,7 @@ th, td { border: 1px solid rgba(55, 53, 47, 0.09); padding: 0.5em 0.75em; text-a
   margin-top: 1.2em;
 }
 #touchControls button {
-  background: white;
+  background: #E6E6FA;
   border: none;
   border-radius: 50%;
   width: 58px; height: 58px;
@@ -397,8 +430,8 @@ th, td { border: 1px solid rgba(55, 53, 47, 0.09); padding: 0.5em 0.75em; text-a
   box-shadow: 0 1px 0 #ddd;
 }
 #touchControls button[data-dir="fire"] {
-  background: var(--peach);
-  box-shadow: 0 4px 0 #e67e22;
+  background: var(--mediumpurple);
+  box-shadow: 0 4px 0 #E6E6FA;
   font-size: 1.6rem;
 }
 
@@ -454,28 +487,42 @@ th, td { border: 1px solid rgba(55, 53, 47, 0.09); padding: 0.5em 0.75em; text-a
 #saveScoreBtn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 #003366; }
 
 /* "Fight aliens" CTA button */
+/* "Fight aliens" CTA button - FORCE PURPLE */
 .arcade-cta {
-  display: inline-flex;
+  display: inline-flex !important;
   align-items: center;
   gap: 10px;
   padding: 12px 26px;
-  font-family: var(--font-sans);
+  font-family: var(--font-mono);
   font-weight: 700;
   font-size: 1rem;
-  color: white;
-  background: linear-gradient(135deg, var(--blue) 0%, #63a4ff 100%);
-  border: none;
+  
+  /* Reset e Colore Viola */
+  background-color: var(--cornflowerblue) !important; 
+  background-image: none !important;
+  color: #FFFFFF !important; 
+  
+  border: none !important;
   border-radius: 50px;
   cursor: pointer;
-  box-shadow: 0 4px 18px rgba(56,125,201,0.3);
+  
+  /* Ombra viola (non arancione/marrone) */
+  box-shadow: 0 4px 15px rgba(102, 51, 153, 0.4) !important;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-decoration: none;
 }
+
 .arcade-cta:hover {
+  background-color: var(--mediumaquamarine) !important; /* Viola più chiaro al passaggio */
   transform: scale(1.05) translateY(-2px);
-  box-shadow: 0 8px 28px rgba(56,125,201,0.4);
-  background: linear-gradient(135deg, #ff8a71 0%, #ffaf9b 100%);
+  box-shadow: 0 8px 25px rgba(123, 44, 191, 0.5) !important;
+  color: #FFFFFF !important;
 }
-.arcade-cta:active { transform: scale(0.98); }
+
+.arcade-cta:active { 
+  transform: scale(0.98); 
+}
+
 .arcade-cta .emoji {
   font-size: 1.2rem;
   animation: bounce 2s ease-in-out infinite;
